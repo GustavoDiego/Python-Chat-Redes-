@@ -46,5 +46,6 @@ Broadcast de Mensagens:
     • Mantém uma lista de clientes conectados.
     
     • Envia a mensagem recebida para todos os clientes na lista.
+    
     • Se a mensagem contiver uma "tag_de_entrada", notifica os clientes sobre a entrada de um novo participante.
 
