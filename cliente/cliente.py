@@ -6,10 +6,12 @@ import os
 
 # Configuração do cliente UDP
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-client.bind(("localhost", random.randint(8000, 9998)))
+p = random.randint(8000, 9998)
+client.bind(("localhost", p))
 
 # Solicita ao usuário que insira um nome para se conectar à sala
 nome = input("Digite seu nome para se conectar a sala: ")
+c = False
 
 # Função para receber mensagens do servidor
 def receber():
@@ -55,7 +57,13 @@ def receber():
                     arquivo_final = file.read()
                 ip = _[0]
                 porta = _[1]
-                print(f'{ip}:{porta}/~{nome}: {arquivo_final} {data_hora}')
+
+                if c:
+                    print(f'{ip}:{porta}/~{nome}: {arquivo_final}. {data_hora}')
+                else:
+                    mensagem = mensagem[17:]
+                    print(f'{arquivo_final}')
+
         except:
             pass
 
@@ -67,9 +75,11 @@ t.start()
 while True:
     # Se o nome começar com "hi, meu nome eh:", remove essa parte
     if "hi, meu nome eh:" in nome:
-        nome = nome[15:]
+        nome = nome[17:]
+        client.sendto(f'"{nome}" entrou no servidor!'.encode(), ('localhost', p))
         while True:
             mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
+            c = True
             if mensagem == "bye":
                 print(f'{nome} deixou o servidor :(')
                 exit()
