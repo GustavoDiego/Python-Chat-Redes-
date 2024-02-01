@@ -3,10 +3,15 @@ Chat UDP - Cliente
 O projeto do chat foi desenvolvido em Python, utilizando o protocolo UDP para a comunicação entre clientes e um servidor. O projeto permite que cada cliente envie e receba mensagens de texto, além de compartilhar arquivos txts com outros usuários. Os scripts cliente.py e servidor.py possibilitam a conexão de usuários a uma sala de chat, permitindo o envio de mensagens de texto e o compartilhamento de arquivos.
 
 Detalhes importantes:
+
 •	Um socket UDP é criado para o cliente e vinculado a um endereço IP e porta local.
+
 •	A porta local é escolhida aleatoriamente entre 8000 e 9998.
+
 •	As mensagens podem ser de texto ou partes de um arquivo.
+
 •	A função receber() é executada em uma thread separada para receber mensagens do servidor.
+
 Processamento de Mensagens do Servidor:
 1.	Verifica se a mensagem é fragmentada ou não.
 2.	Se a mensagem for fragmentada, o servidor irá receber o código (!1!1).
