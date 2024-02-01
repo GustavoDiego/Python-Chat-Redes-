@@ -17,6 +17,7 @@ Processamento de Mensagens do Servidor:
 2.	Se a mensagem for fragmentada, o servidor irá receber o código (!1!1).
 3.	Caso não receba o código anterior, o servidor vai agir normalmente lendo a mensagem, criando o arquivo, salvando e printando.
 4.	Caso o receba o código (!0!0!) significa que o último pedaço do arquivo foi entregue então ele salva o arquivo localmente e exibe.
+
 Envio de Mensagens do Cliente:
 1.	Loop principal para o envio de mensagens pelo cliente.
 2.	Se o nome começar com "hi, meu nome eh:", o cliente envia mensagens de texto.
