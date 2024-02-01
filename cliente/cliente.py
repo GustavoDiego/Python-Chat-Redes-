@@ -59,7 +59,7 @@ def receber():
                 porta = _[1]
 
                 if c:
-                    print(f'{ip}:{porta}/~{nome}: {arquivo_final}. {data_hora}')
+                    print(f'{ip}:{p}/~{nome}: {arquivo_final} {data_hora}')
                 else:
                     mensagem = mensagem[17:]
                     print(f'{arquivo_final}')
@@ -71,12 +71,15 @@ def receber():
 t = threading.Thread(target=receber)
 t.start()
 
+
+
 # Loop principal para o envio de mensagens
 while True:
     # Se o nome começar com "hi, meu nome eh:", remove essa parte
-    if "hi, meu nome eh:" in nome:
+    if "hi, meu nome eh: " in nome:
         nome = nome[17:]
-        client.sendto(f'"{nome}" entrou no servidor!'.encode(), ('localhost', p))
+        #envia ao servidor a informacao que e um cliente novo
+        client.sendto(f'tag_de_entrada:{nome}'.encode(), ("localhost", 5555))
         while True:
             mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
             c = True
@@ -89,7 +92,7 @@ while True:
 
                 # Salva a mensagem em um arquivo local
                 with open(nome_arquivo, "w") as file:
-                    file.write(f'{mensagem}\n')
+                    file.write(f'{mensagem}')
 
                 # Verifica se o arquivo é grande demais para ser enviado em uma única mensagem
                 tamanho_max = 800
@@ -116,4 +119,4 @@ while True:
                     client.sendto(arquivo_bytes, ("localhost", 5555))
     else:
         # Solicita ao usuário que insira um nome para se conectar à sala
-        nome = input("Digite seu nome para se conectar a sala: ")
+        nome = input("Digite seu nome para se conectar a sala (digite 'hi, meu nome eh: >nome<'): ")
