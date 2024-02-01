@@ -11,11 +11,10 @@ client.bind(("localhost", p))
 
 # Solicita ao usuário que insira um nome para se conectar à sala
 nome = input("Digite seu nome para se conectar a sala: ")
-c = False
+escreveu_mensagem = False
 
 # Função para receber mensagens do servidor
 def receber():
-
     while True:
         try:
             # Recebe mensagens do servidor
@@ -40,8 +39,8 @@ def receber():
                 with open(nome_juntado,'w') as file:
                     file.write(card)
                 with open(nome_juntado,'r') as file:
-                    arquivo_final = file.read()
-                    print(f'{ip}:{p}/~ {arquivo_final} {data_hora}')
+                    ult = file.read()
+                    print(ult)
 
             # Processa mensagens regulares
             if mensagem.decode() != "!0!0!":
@@ -57,9 +56,9 @@ def receber():
                     arquivo_final = file.read()
                 ip = _[0]
 
-
-                if c:
+                if escreveu_mensagem:
                     print(f'{ip}:{p}/~ {arquivo_final} {data_hora}')
+
                 else:
                     mensagem = mensagem[17:]
                     print(f'{arquivo_final}')
@@ -82,7 +81,7 @@ while True:
         client.sendto(f'tag_de_entrada:{nome}'.encode(), ("localhost", 5555))
         while True:
             mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
-            c = True
+            escreveu_mensagem = True
             if mensagem == "bye":
                 print(f'{nome} deixou o servidor :(')
                 exit()
@@ -92,7 +91,7 @@ while True:
 
                 # Salva a mensagem em um arquivo local
                 with open(nome_arquivo, "w") as file:
-                    file.write(f'{nome} : {mensagem}')
+                    file.write(f'{mensagem}')
 
                 # Verifica se o arquivo é grande demais para ser enviado em uma única mensagem
                 tamanho_max = 800
