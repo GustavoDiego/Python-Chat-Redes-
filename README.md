@@ -27,16 +27,24 @@ Envio de Mensagens do Cliente:
 
 
 Chat UDP - Servidor
+
 O código do servidor implementa a parte receptora e de broadcast do sistema de chat UDP. Ele gerencia as mensagens recebidas dos clientes, mantém uma lista de clientes conectados e distribui as mensagens para todos os participantes da sala de chat.
 Funcionalidades Principais:
+
 Configuração do Servidor:
+   
     • Um socket UDP é criado para o servidor e vinculado à porta 5555 no localhost.
 Recebimento de Mensagens:
+    
     • Função executada em uma thread separada para receber mensagens dos clientes.
+    
     • As mensagens recebidas são colocadas em uma fila (mensagens).
 Broadcast de Mensagens:
+    
     • Função executada em uma thread separada para distribuir as mensagens recebidas para todos os clientes.
+    
     • Mantém uma lista de clientes conectados.
+    
     • Envia a mensagem recebida para todos os clientes na lista.
     • Se a mensagem contiver uma "tag_de_entrada", notifica os clientes sobre a entrada de um novo participante.
 
