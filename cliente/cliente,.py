@@ -6,14 +6,16 @@ import os
 
 # Configuração do cliente UDP
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-client.bind(("localhost", random.randint(8000, 9998)))
+p = random.randint(8000, 9998)
+client.bind(("localhost", p))
 
 # Solicita ao usuário que insira um nome para se conectar à sala
 nome = input("Digite seu nome para se conectar a sala: ")
+c = False
 
 # Função para receber mensagens do servidor
 def receber():
-    lista_de_partes =[]
+
     while True:
         try:
             # Recebe mensagens do servidor
@@ -38,8 +40,8 @@ def receber():
                 with open(nome_juntado,'w') as file:
                     file.write(card)
                 with open(nome_juntado,'r') as file:
-                    ult = file.read()
-                    print(ult)
+                    arquivo_final = file.read()
+                    print(f'{ip}:{p}/~ {arquivo_final} {data_hora}')
 
             # Processa mensagens regulares
             if mensagem.decode() != "!0!0!":
@@ -54,8 +56,14 @@ def receber():
                 with open(nome_arquivo, "r") as file:
                     arquivo_final = file.read()
                 ip = _[0]
-                porta = _[1]
-                print(f'{ip}:{porta}/~{nome}: {arquivo_final} {data_hora}')
+
+
+                if c:
+                    print(f'{ip}:{p}/~ {arquivo_final} {data_hora}')
+                else:
+                    mensagem = mensagem[17:]
+                    print(f'{arquivo_final}')
+
         except:
             pass
 
@@ -63,13 +71,18 @@ def receber():
 t = threading.Thread(target=receber)
 t.start()
 
+
+
 # Loop principal para o envio de mensagens
 while True:
     # Se o nome começar com "hi, meu nome eh:", remove essa parte
-    if "hi, meu nome eh:" in nome:
-        nome = nome[15:]
+    if "hi, meu nome eh: " in nome:
+        nome = nome[17:]
+        #envia ao servidor a informacao que e um cliente novo
+        client.sendto(f'tag_de_entrada:{nome}'.encode(), ("localhost", 5555))
         while True:
             mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
+            c = True
             if mensagem == "bye":
                 print(f'{nome} deixou o servidor :(')
                 exit()
@@ -79,7 +92,7 @@ while True:
 
                 # Salva a mensagem em um arquivo local
                 with open(nome_arquivo, "w") as file:
-                    file.write(f'{mensagem}\n')
+                    file.write(f'{nome} : {mensagem}')
 
                 # Verifica se o arquivo é grande demais para ser enviado em uma única mensagem
                 tamanho_max = 800
@@ -106,4 +119,4 @@ while True:
                     client.sendto(arquivo_bytes, ("localhost", 5555))
     else:
         # Solicita ao usuário que insira um nome para se conectar à sala
-        nome = input("Digite seu nome para se conectar a sala: ")
+        nome = input("Digite seu nome para se conectar a sala (digite 'hi, meu nome eh: >nome<'): ")
