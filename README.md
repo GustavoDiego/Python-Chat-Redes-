@@ -1,5 +1,6 @@
 # Python-Chat-Redes-
 Chat UDP - Cliente
+
 O projeto do chat foi desenvolvido em Python, utilizando o protocolo UDP para a comunicação entre clientes e um servidor. O projeto permite que cada cliente envie e receba mensagens de texto, além de compartilhar arquivos txts com outros usuários. Os scripts cliente.py e servidor.py possibilitam a conexão de usuários a uma sala de chat, permitindo o envio de mensagens de texto e o compartilhamento de arquivos.
 
 Detalhes importantes:
