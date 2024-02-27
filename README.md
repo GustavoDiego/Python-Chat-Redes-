@@ -26,7 +26,7 @@ Processamento de Mensagens do Servidor:
 Envio de Mensagens do Cliente:
 
 1.	Loop principal para o envio de mensagens pelo cliente.
-2.	Se o nome começar com "hi, meu nome eh:", o cliente envia mensagens de texto.
+2.	Caso o nome começar com "hi, meu nome eh:" o cliente envia mensagens de texto.
 3.	Se o nome não começar com esse prefixo, o cliente solicita ao usuário um nome para se conectar à sala.
 4.	É checado o tamanho das mensagens, e caso ela seja maior que 800 (valor escolhido com intenção de ter margem de tamanho) os arquivos serão enviados em partes, entretanto caso os arquivos sejam menor que 800 serão enviados em uma única mensagem.
 
