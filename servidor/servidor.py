@@ -94,10 +94,9 @@ def receber():
 
                 if checksum == checksum_ext:
 
-                    if ":" in mensagem.decode('utf-8') :
-                        print(f'nome: ' + mensagem.decode()[:mensagem.decode().index(":")+1].rstrip(
-                            "\x00") + f', ip: {addr[0]} , porta {addr[1]} falou:' + mensagem.decode("utf-8").rstrip(
-                            '\x00'))
+                    if ":" in mensagem.decode('utf-8') and flag.decode().rstrip('\x00') != "tag" :
+                        print(f'nome: ' + mensagem.decode()[:mensagem.decode().index(":")-1].rstrip(
+                            "\x00") + f', ip: {addr[0]} , porta {addr[1]} falou:' + mensagem.decode("utf-8").rstrip('\x00').split(':')[-1])
 
                     if flag.decode().rstrip('\x00') == 'tag':
 
