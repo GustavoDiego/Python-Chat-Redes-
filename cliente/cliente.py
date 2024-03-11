@@ -157,175 +157,175 @@ t_time = threading.Thread(target=timer)
 t_time.start()
 qnt_mensagens_enviadas = 0
 # Loop principal para o envio de mensagens
-while True:
-    try:
-        # Se o nome começar com "hi, meu nome eh:", remove essa parte
-        if "hi, meu nome eh: " in nome:
-            nome_v = nome[17:]
+try:
+    while True:
 
-            # envia ao servidor a informacao que e um cliente novo
-            checksum = 0
+            # Se o nome começar com "hi, meu nome eh:", remove essa parte
+            if "hi, meu nome eh: " in nome:
+                nome_v = nome[17:]
 
-
-            ini_msg = packer.pack(pkt, seqnum, b'ini', checksum, 'ini'.encode('utf-8'))
-            checksum_ini = __int_chksum(bytearray(ini_msg))
-            fin_msg = packer.pack(pkt, seqnum, b'ini', checksum_ini, 'ini'.encode('utf-8'))
-            client.sendto(fin_msg, ("localhost", 5555))
-            ack_chegou = False
-            timer()
-
-            if ack_chegou :
-                qnt_mensagens_enviadas = 1
+                # envia ao servidor a informacao que e um cliente novo
                 checksum = 0
-                ini_msg = packer.pack(pkt, seqnum, b'tag', checksum, f' Entrou na conversa : {nome_v}'.encode("utf-8"))
-                checksum_tag = __int_chksum(bytearray(ini_msg))
-                fin_msg = packer.pack(pkt, seqnum, b'tag', checksum_tag,
-                                      f' Entrou na conversa : {nome_v}'.encode("utf-8"))
+
+
+                ini_msg = packer.pack(pkt, seqnum, b'ini', checksum, 'ini'.encode('utf-8'))
+                checksum_ini = __int_chksum(bytearray(ini_msg))
+                fin_msg = packer.pack(pkt, seqnum, b'ini', checksum_ini, 'ini'.encode('utf-8'))
                 client.sendto(fin_msg, ("localhost", 5555))
+                ack_chegou = False
+                timer()
 
-                while True:
-                    if ack_chegou:
-                        seqnum = (str((int(seqnum) + 1) % 2)).encode("utf-8")
-                        seqnum_esperado = seqnum
-                        if mensagem != "bye":
-                            mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
-                            escreveu_mensagem = True
+                if ack_chegou :
+                    qnt_mensagens_enviadas = 1
+                    checksum = 0
+                    ini_msg = packer.pack(pkt, seqnum, b'tag', checksum, f' Entrou na conversa : {nome_v}'.encode("utf-8"))
+                    checksum_tag = __int_chksum(bytearray(ini_msg))
+                    fin_msg = packer.pack(pkt, seqnum, b'tag', checksum_tag,
+                                          f' Entrou na conversa : {nome_v}'.encode("utf-8"))
+                    client.sendto(fin_msg, ("localhost", 5555))
 
-                        if mensagem == "bye":
-                            checksum = 0
+                    while True:
+                        if ack_chegou:
+                            seqnum = (str((int(seqnum) + 1) % 2)).encode("utf-8")
+                            seqnum_esperado = seqnum
+                            if mensagem != "bye":
+                                mensagem = input('Digite sua mensagem (ou "bye" para sair): ')
+                                escreveu_mensagem = True
 
-                            ini_msg = packer.pack(pkt, seqnum, b'syn', checksum, ''.encode("utf-8"))
-                            checksum_bye = __int_chksum(bytearray(ini_msg))
-                            fin_msg = packer.pack(pkt, seqnum, b'syn', checksum_bye, ''.encode("utf-8"))
-
-                            client.sendto(fin_msg, ("localhost", 5555))
-
-                            ack_chegou = False
-                            timer()
-
-                            if ack_chegou:
+                            if mensagem == "bye":
                                 checksum = 0
 
-                                ini_msg = packer.pack(pkt, seqnum, b'fin', checksum,
-                                                      f'{nome_v} Saiu da conversa'.encode("utf-8"))
-                                checksum_Ack = __int_chksum(bytearray(ini_msg))
-                                fin_msg = packer.pack(pkt, seqnum, b'fin', checksum_Ack,
-                                                      f'{nome_v} Saiu da conversa'.encode("utf-8"))
+                                ini_msg = packer.pack(pkt, seqnum, b'syn', checksum, ''.encode("utf-8"))
+                                checksum_bye = __int_chksum(bytearray(ini_msg))
+                                fin_msg = packer.pack(pkt, seqnum, b'syn', checksum_bye, ''.encode("utf-8"))
+
                                 client.sendto(fin_msg, ("localhost", 5555))
 
-                                print(f'{nome_v} deixou a conversa :(')
-                                exit()
+                                ack_chegou = False
+                                timer()
+
+                                if ack_chegou:
+                                    checksum = 0
+
+                                    ini_msg = packer.pack(pkt, seqnum, b'fin', checksum,
+                                                          f'{nome_v} Saiu da conversa'.encode("utf-8"))
+                                    checksum_Ack = __int_chksum(bytearray(ini_msg))
+                                    fin_msg = packer.pack(pkt, seqnum, b'fin', checksum_Ack,
+                                                          f'{nome_v} Saiu da conversa'.encode("utf-8"))
+                                    client.sendto(fin_msg, ("localhost", 5555))
+
+                                    print(f'{nome_v} deixou a conversa :(')
+                                    exit()
 
 
-                            elif not ack_chegou or chegou_errado:
-                                mensagem = "bye"
-                                continue
+                                elif not ack_chegou or chegou_errado:
+                                    mensagem = "bye"
+                                    continue
 
-                        else:
-                            # Gera o nome do arquivo usando a data atual e o nome do autor
-                            nome_arquivo = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.txt"
+                            else:
+                                # Gera o nome do arquivo usando a data atual e o nome do autor
+                                nome_arquivo = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.txt"
 
-                            # Salva a mensagem em um arquivo local
-                            with open(nome_arquivo, "w") as file:
-                                file.write(f'{nome_v} : {mensagem}')
+                                # Salva a mensagem em um arquivo local
+                                with open(nome_arquivo, "w") as file:
+                                    file.write(f'{nome_v} : {mensagem}')
 
-                            # Verifica se o arquivo é grande demais para ser enviado em uma única mensagem
-                            tamanho_max = 800
-                            tamanho_do_arquivo = os.path.getsize(nome_arquivo)
+                                # Verifica se o arquivo é grande demais para ser enviado em uma única mensagem
+                                tamanho_max = 800
+                                tamanho_do_arquivo = os.path.getsize(nome_arquivo)
 
-                            flag = '!1!0!'.encode("utf-8")
-                            if tamanho_do_arquivo >= tamanho_max:
-                                # Envia o arquivo em partes
-                                with open(nome_arquivo, "r") as file:
-                                    while True:
-                                        if ack_chegou:
-                                            parte_do_arquivo = file.read(800)
-                                            parte_do_arquivo = parte_do_arquivo.encode("utf-8")
+                                flag = '!1!0!'.encode("utf-8")
+                                if tamanho_do_arquivo >= tamanho_max:
+                                    # Envia o arquivo em partes
+                                    with open(nome_arquivo, "r") as file:
+                                        while True:
+                                            if ack_chegou:
+                                                parte_do_arquivo = file.read(800)
+                                                parte_do_arquivo = parte_do_arquivo.encode("utf-8")
 
 
-                                        elif not ack_chegou or chegou_errado:
-                                            pass
+                                            elif not ack_chegou or chegou_errado:
+                                                pass
 
-                                        if not parte_do_arquivo:
-                                            flag = '!0!0!'.encode("utf-8")
+                                            if not parte_do_arquivo:
+                                                flag = '!0!0!'.encode("utf-8")
+
+                                                checksum = 0
+                                                msg = 'fim'.encode("utf-8")
+
+                                                ini_msg = packer.pack(pkt, seqnum, flag, checksum, msg)
+                                                checksum_fim = __int_chksum(bytearray(ini_msg))
+                                                fin_msg = packer.pack(pkt, seqnum, flag, checksum_fim, msg)
+                                                client.sendto(fin_msg, ("localhost", 5555))
+                                                qnt_mensagens_enviadas += 1
+
+                                                ack_chegou = False
+                                                timer()
+
+                                                if ack_chegou:
+                                                    break
+
+                                                else:
+                                                    continue
+
+                                            flag = '!1!1!'.encode("utf-8")
 
                                             checksum = 0
-                                            msg = 'fim'.encode("utf-8")
 
-                                            ini_msg = packer.pack(pkt, seqnum, flag, checksum, msg)
-                                            checksum_fim = __int_chksum(bytearray(ini_msg))
-                                            fin_msg = packer.pack(pkt, seqnum, flag, checksum_fim, msg)
+                                            ini_msg = packer.pack(pkt, seqnum, flag, checksum, parte_do_arquivo)
+                                            checksum_fl = __int_chksum(bytearray(ini_msg))
+                                            fin_msg = packer.pack(pkt, seqnum, flag, checksum_fl, parte_do_arquivo)
+
                                             client.sendto(fin_msg, ("localhost", 5555))
                                             qnt_mensagens_enviadas += 1
 
                                             ack_chegou = False
                                             timer()
 
-                                            if ack_chegou:
-                                                break
+                                # Envia o arquivo como uma única mensagem
+                                else:
+                                    with open(nome_arquivo, "r") as file:
+                                        arquivo_bytes = file.read()
+                                        arquivo_bytes = arquivo_bytes.encode("utf-8")
 
-                                            else:
-                                                continue
+                                    checksum = 0
+                                    ini_msg = packer.pack(pkt, seqnum, flag, checksum, arquivo_bytes)
+                                    checksum_ = __int_chksum(bytearray(ini_msg))
 
-                                        flag = '!1!1!'.encode("utf-8")
+                                    fin_msg = packer.pack(pkt, seqnum, flag, checksum_, arquivo_bytes)
 
-                                        checksum = 0
+                                    client.sendto(fin_msg, ("localhost", 5555))
+                                    qnt_mensagens_enviadas += 1
 
-                                        ini_msg = packer.pack(pkt, seqnum, flag, checksum, parte_do_arquivo)
-                                        checksum_fl = __int_chksum(bytearray(ini_msg))
-                                        fin_msg = packer.pack(pkt, seqnum, flag, checksum_fl, parte_do_arquivo)
+                                    ack_chegou = False
+                                    timer()
 
-                                        client.sendto(fin_msg, ("localhost", 5555))
-                                        qnt_mensagens_enviadas += 1
-
-                                        ack_chegou = False
-                                        timer()
-
-                            # Envia o arquivo como uma única mensagem
-                            else:
-                                with open(nome_arquivo, "r") as file:
-                                    arquivo_bytes = file.read()
-                                    arquivo_bytes = arquivo_bytes.encode("utf-8")
-
-                                checksum = 0
-                                ini_msg = packer.pack(pkt, seqnum, flag, checksum, arquivo_bytes)
-                                checksum_ = __int_chksum(bytearray(ini_msg))
-
-                                fin_msg = packer.pack(pkt, seqnum, flag, checksum_, arquivo_bytes)
-
-                                client.sendto(fin_msg, ("localhost", 5555))
-                                qnt_mensagens_enviadas += 1
-
-                                ack_chegou = False
-                                timer()
-
-                    elif not ack_chegou or chegou_errado:
+                        elif not ack_chegou or chegou_errado:
 
 
-                        checksum = 0
+                            checksum = 0
 
-                        ini_msg = packer.pack(pkt, seqnum, flag, checksum, arquivo_bytes)
-                        checksum_Ack = __int_chksum(bytearray(ini_msg))
+                            ini_msg = packer.pack(pkt, seqnum, flag, checksum, arquivo_bytes)
+                            checksum_Ack = __int_chksum(bytearray(ini_msg))
 
-                        fin_msg = packer.pack(pkt, seqnum, flag, checksum_Ack, arquivo_bytes)
+                            fin_msg = packer.pack(pkt, seqnum, flag, checksum_Ack, arquivo_bytes)
 
-                        client.sendto(fin_msg, ("localhost", 5555))
-                        qnt_mensagens_enviadas += 1
+                            client.sendto(fin_msg, ("localhost", 5555))
+                            qnt_mensagens_enviadas += 1
 
-                        ack_chegou = False
-                        timer()
-            elif not ack_chegou or chegou_errado:
-                pass
-        else:
-            # Solicita ao usuário que insira um nome para se conectar à sala
-            nome = input("Digite seu nome para se conectar a sala (digite 'hi, meu nome eh: >nome<'): ")
-            continue
+                            ack_chegou = False
+                            timer()
+                elif not ack_chegou or chegou_errado:
+                    pass
+            else:
+                # Solicita ao usuário que insira um nome para se conectar à sala
+                nome = input("Digite seu nome para se conectar a sala (digite 'hi, meu nome eh: >nome<'): ")
+                continue
 
-    except:
-        # Caso ele não tenha chegado a enviar nenhuma mensagem, o servidor não existe
-        if qnt_mensagens_enviadas == 0:
-            print(mensagem_servidor)
-        # Caso contrário, o servidor foi desligado
-        else:
-            print("O servidor foi desconectado/inativo")
-        continue
+except:
+    # Caso ele não tenha chegado a enviar nenhuma mensagem, o servidor não existe
+    if qnt_mensagens_enviadas == 0:
+        print(mensagem_servidor)
+    # Caso contrário, o servidor foi desligado
+    else:
+        print("O servidor foi desconectado/inativo")
