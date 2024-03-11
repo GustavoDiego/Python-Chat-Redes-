@@ -44,7 +44,6 @@ def enviar_ack(seqnum, flag, addr):
         fin_msg = packer.pack(ack, seqnum, flag, checksum, 'ack'.encode("utf-8"))
         servidor.sendto(fin_msg, addr)
 
-
     print('ack enviado')
 
 mensagens = queue.Queue()
@@ -66,12 +65,9 @@ def timer():
 def receber():
     global ack_chegou,  seqnum_esperado, seqnum
     while True:
-
             mensagem_toda, addr = servidor.recvfrom(1024)
 
             tipo, seqnum_ext, flag, checksum_ext, mensagem = unpacker.unpack(mensagem_toda)
-
-
 
             if tipo == ack:
                     print('chegou um ack')
@@ -86,24 +82,20 @@ def receber():
                             print(f"senum esperado: {seqnum_esperado.decode('utf-8')} seqnum recebido: {seqnum_ext.decode('utf-8')}")
                     else:
                         print("cheksum não bateu")
+
             else:
 
                 mensagem_chks = packer.pack(tipo, seqnum_ext, flag, 0, mensagem)
                 checksum = __int_chksum(bytearray(mensagem_chks))
 
-
                 if checksum == checksum_ext:
-
                     if ":" in mensagem.decode('utf-8') and flag.decode().rstrip('\x00') != "tag" :
                         print(f'nome: ' + mensagem.decode()[:mensagem.decode().index(":")-1].rstrip(
                             "\x00") + f', ip: {addr[0]} , porta {addr[1]} falou:' + mensagem.decode("utf-8").rstrip('\x00').split(':')[-1])
 
                     if flag.decode().rstrip('\x00') == 'tag':
-
                         print(mensagem.decode("utf-8")[21:].rstrip('\x00') + " Entrou no Server")
-
                         clientes.append(addr)
-
                         checksum = 0
                         ini_msg = packer.pack(pkt, seqnum_ext, '!1!0!'.encode('utf-8'), checksum, mensagem)
                         checksum = __int_chksum(bytearray(ini_msg))
@@ -115,43 +107,29 @@ def receber():
                         checksum = __int_chksum(bytearray(ini_msg))
                         mensagem_toda = packer.pack(tipo, seqnum, "!1!0!".encode("utf-8"), checksum, mensagem)
                         mensagens.put((mensagem_toda, addr))
-
                         clientes.remove(addr)
+
                     elif flag.decode("utf-8") == '!1!0!' or flag.decode("utf-8") == '!1!1!' or flag.decode("utf-8") == '!0!0!':
 
                         ini_msg = packer.pack(pkt, seqnum, flag, 0, mensagem)
                         checksum = __int_chksum(bytearray(ini_msg))
-
                         mensagem_toda = packer.pack(tipo,seqnum,flag, checksum, mensagem)
                         mensagens.put((mensagem_toda, addr))
                         enviar_ack(seqnum_ext, flag, addr)
 
                     else:
-
-
-
                         enviar_ack(seqnum_ext, flag, addr)
-
 
                 else:
                     print("cheksum não bateu")
-
-
-
 
 def broadcast():
     global ack_chegou
     while True:
         while not mensagens.empty():
             mensagem_c, addr = mensagens.get()
-
-
-
             for cliente in clientes:
-
-
                 try:
-
                         # Envie a mensagem para todos os clientes menos ele mesmo
                         if addr != cliente:
 
@@ -166,7 +144,6 @@ def broadcast():
 t1 = threading.Thread(target=receber)
 t2 = threading.Thread(target=broadcast)
 t_time = threading.Thread(target=timer)
-
 
 t1.start()
 t2.start()
