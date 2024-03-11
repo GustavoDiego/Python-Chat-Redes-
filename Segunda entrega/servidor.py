@@ -82,10 +82,11 @@ def receber():
                 checksum = __int_chksum(bytearray(mensagem_chks))
 
                 if checksum == checksum_ext:
-                    if ":" in mensagem.decode('utf-8') and flag.decode().rstrip('\x00') != "tag" :
-                        print(f'nome: ' + mensagem.decode()[:mensagem.decode().index(":")-1].rstrip(
+                    if ":" in mensagem.decode('utf-8')  and flag.decode().rstrip('\x00') != "tag" :
+                        print(f'nome: ' + mensagem.decode('utf-8')[:mensagem.decode().index(":")-1].rstrip(
                             "\x00") + f', ip: {addr[0]} , porta {addr[1]} falou:' + mensagem.decode("utf-8").rstrip('\x00').split(':')[-1])
-
+                    if  flag.decode('utf-8') == "!1!1!":
+                        print(f', ip: {addr[0]} , porta {addr[1]} falou:' + mensagem.decode('utf-8'))
                     if flag.decode().rstrip('\x00') == 'tag':
                         print(mensagem.decode("utf-8")[21:].rstrip('\x00') + " Entrou no Server")
                         clientes.append(addr)
