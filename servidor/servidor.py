@@ -46,12 +46,6 @@ def enviar_ack(seqnum, flag, addr):
 
     print('ack enviado')
 
-mensagens = queue.Queue()
-clientes = []
-
-servidor = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-servidor.bind(("localhost", 5555))
-
 def timer():
 
     while True:
@@ -140,6 +134,12 @@ def broadcast():
 
                 except:
                     clientes.remove(cliente)
+
+mensagens = queue.Queue()
+clientes = []
+
+servidor = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+servidor.bind(("localhost", 5555))
 
 t1 = threading.Thread(target=receber)
 t2 = threading.Thread(target=broadcast)
