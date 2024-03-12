@@ -34,13 +34,6 @@ Envio de Mensagens do Cliente:
 4.	É checado o tamanho das mensagens, e caso ela seja maior que 800 (valor escolhido com intenção de ter margem de tamanho) os arquivos serão enviados em partes, entretanto caso os arquivos sejam menor que 800 serão enviados em uma única mensagem.
 
 
-#### Segunda entrega
-
-- Na segunda entrega, foi implementado o protocolo RTT 3.0 para garantir a confiabilidade na comunicação entre cliente e servidor. Isso envolve a utilização de números de sequência, confirmação de recebimento (acknowledgment) e retransmissão de pacotes.
-- Também na segunda entrega, foram introduzidas estruturas (Structs) para empacotar e desempacotar os dados a serem enviados entre cliente e servidor, além do cálculo do checksum para garantir a integridade dos dados transmitidos.
-- O código da segunda entrega implementa tratamento de erros, como a verificação de números de sequência incorretos e checksums incorretos, além de retransmissão de pacotes em caso de falhas na entrega.
-
-
 
 ### **Chat UDP - Servidor**
 #### Primeira Entrega
@@ -62,10 +55,3 @@ Broadcast de Mensagens:
 - Se a mensagem contiver uma "tag_de_entrada", notifica os clientes sobre a entrada de um novo participante.
 
 
-#### Segunda entrega
-
-- Assim como no código do cliente, o código do servidor da segunda entrega implementa o protocolo RTT 3.0 para garantir a confiabilidade na comunicação entre cliente e servidor. Isso inclui o uso de números de sequência, confirmações de recebimento (acknowledgments) e retransmissão de pacotes.
-- Foram introduzidas estruturas (Structs) para empacotar e desempacotar os dados transmitidos entre cliente e servidor, juntamente com o cálculo do checksum para garantir a integridade dos dados.
-- O código do servidor da segunda entrega inclui lógica para enviar e receber acknowledgments (ACKs) entre servidor e cliente, garantindo a entrega confiável de mensagens.
-- O código implementa tratamento de erros, como verificação de números de sequência incorretos e checksums incorretos, além de retransmissão de pacotes em caso de falhas na entrega.
-- Foi adicionado um timer para controlar o tempo de espera por ACKs, garantindo que os pacotes sejam retransmitidos se não houver confirmação de recebimento dentro do tempo limite.
