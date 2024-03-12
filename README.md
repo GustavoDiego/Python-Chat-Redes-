@@ -7,6 +7,7 @@
 
 
 ### **Chat UDP - Cliente**
+#### Primeira Entrega
 
 Detalhes importantes:
 
@@ -33,7 +34,7 @@ Envio de Mensagens do Cliente:
 4.	É checado o tamanho das mensagens, e caso ela seja maior que 800 (valor escolhido com intenção de ter margem de tamanho) os arquivos serão enviados em partes, entretanto caso os arquivos sejam menor que 800 serão enviados em uma única mensagem.
 
 
-## Segunda entrega
+#### Segunda entrega
 
 - Na segunda entrega, foi implementado o protocolo RTT 3.0 para garantir a confiabilidade na comunicação entre cliente e servidor. Isso envolve a utilização de números de sequência, confirmação de recebimento (acknowledgment) e retransmissão de pacotes.
 - Também na segunda entrega, foram introduzidas estruturas (Structs) para empacotar e desempacotar os dados a serem enviados entre cliente e servidor, além do cálculo do checksum para garantir a integridade dos dados transmitidos.
@@ -42,6 +43,7 @@ Envio de Mensagens do Cliente:
 
 
 ### **Chat UDP - Servidor**
+#### Primeira Entrega
 
 O código do servidor implementa a parte receptora e de broadcast do sistema de chat UDP. Ele gerencia as mensagens recebidas dos clientes, mantém uma lista de clientes conectados e distribui as mensagens para todos os participantes da sala de chat.
 Funcionalidades Principais:
@@ -60,7 +62,7 @@ Broadcast de Mensagens:
 - Se a mensagem contiver uma "tag_de_entrada", notifica os clientes sobre a entrada de um novo participante.
 
 
-## Segunda entrega
+#### Segunda entrega
 
 - Assim como no código do cliente, o código do servidor da segunda entrega implementa o protocolo RTT 3.0 para garantir a confiabilidade na comunicação entre cliente e servidor. Isso inclui o uso de números de sequência, confirmações de recebimento (acknowledgments) e retransmissão de pacotes.
 - Foram introduzidas estruturas (Structs) para empacotar e desempacotar os dados transmitidos entre cliente e servidor, juntamente com o cálculo do checksum para garantir a integridade dos dados.
