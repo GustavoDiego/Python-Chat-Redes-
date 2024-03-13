@@ -89,7 +89,7 @@ def receber():
                         enviar_ack(seqnum_ext)  # Envia um ACK para confirmar a recepção do pacote
                         card += mensagem_.decode('utf-8')  # Adiciona a parte da mensagem à variável de montagem
                     else:
-                        enviar_ack((int(seqnum_ext.decode("utf-8"))+1)%2)  # Envia um ACK com o próximo número de sequência esperado
+                        enviar_ack((int(seqnum_ext.decode("utf-8"))+1)%2)  # Envia um ACK com o anterior número de sequência esperado
 
                 if flag.decode("utf-8") == '!0!0!':
                     mensagem_chks = packer.pack(tipo, seqnum_ext, flag, 0, mensagem_)
